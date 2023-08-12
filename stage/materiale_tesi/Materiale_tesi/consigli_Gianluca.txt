@@ -1,0 +1,244 @@
+Algoritmi applicati
+greedy con + euristiche
+
+-posizionare prima gli elementi a frequenza piu' alta 
+
+- non vado a posizionare solo i + frequenti ma anche gli associati piu' frequenti
+
+valutazione della funzione: ritorna il passo migliore per fermate o distanza (parlare della convergenza all'aumentare del passo)
+
+confrontando i range delle configurazioni a passi diversi si nota che le configurazioni dato un range piccolo hanno un numero di elementi uguali elevato.
+
+per costruzione applico lo slotting (lo stesso articolo e' in un ubicazione o in piu' contigue) evitando che lo stesso articolo sia presente in piu' ubicazioni.
+
+euristico perche' scelgo in base alla frequenza (potrebbe non essere la miglior configurazione) greedy perche' scelgo il prodotto  o associato a freq maggiore
+
+
+motivare il greedy: 
+
+m numero di articoli , k ubicazioni, m<=k (magazzino contiene tutti gli articoli)
+
+m! configurazioni quindi esatto impiegherebbe troppo tempo e non garantirebbe di trovare una soluzione ammissibile (soluzione che rispetta i vincoli imposti dal problema)
+ se fermato in quanto per trovare la soluzione ottima deve percorrere tutte le possibili configurazioni. (6344 articoli e POTREBBE NON ESSERE ammissibile se venisse stoppato prima di 
+ aver posizionato tutti gli elementi o non rispettando i requisiti minimi di ammissibilita'). (ci sono tecniche per ridurre il tempo di esecuzione non considerando alcune soluzioni
+ ammissibili perche' sicuramente non ottime).
+ Greedy invece O(m) ovvero lineare nella dimensione del problema.
+euristico fornisce una soluzione ammissibile in tempi accettabili (anche per il fatto che parto da una configurazione iniziale che e' gia' una soluzione ammissibile). 
+Altre tecniche euristiche potrebbero probabilmente migliorare la configurazione (possibile sviluppo futuro).
+
+abbiamo scelto array per rappresentare magazzino perche' fornisce un accesso piu' rapido nel nostro caso rispetto ad altre strutture dati.
+
+non era scontato che gli articoli ad alta frequenza vadano vicini perche' potrebbe presentarsi il caso che articoli ad altra frequenza non siano compresi negli stessi ordini
+o abbiano una freq di associazione bassa.
+
+
+scopo: ridurre il numero di fermate per ridurre il tempo di prelievo
+
+NB: importante che gli articoli siano nello stesso range anche se non si trovano nella stessa posizione tra un passo e l'altro.
+
+
+
+le diff sui range serve a confermare i dati di form3 in quanto dai dati sperimentali e' emerso che al variare del passo il numero di fermate tende a convergere.
+Per confermare questo risultato si e' analizzata la disposizione degli articoli all' interno di un range di 6 ed e' emerso che e' presente un numero elevato di articoli
+comune tra le varie configurazioni avvalorando l' ipotesi sperimentale.
+
+in tutte le prove c'e' stato un miglioramento del numero di fermate indipendentemente dagli articoli venduti in quanto le disposizioni non tengono conto della stagionalita' di 
+vendita dei prodotti. Una disposizione migliorativa potrebbe presentarsi nel caso in cui venga tenuto conto della stagionalita' riposizionando gli articoli (questo nel 
+codice va fatto considerando solo gli articoli presenti negli ordini della stagione mettendoli nelle prime posizioni per poi mettere i mancanti che non sono compresi nella stagione
+con la stessa logica) oppure dare una priorita' con un campo dati ad esempio.
+
+numeri di versione:
+
+.net framework 4.8
+devexpress 19.2
+entity framework 6.0.0.0
+system.data.linq 4.0.0.0
+Microsoft Visual Studio Enterprise 2019 Versione 16.11.4
+
+
+
+
+
+
+
+
+
+
+
+
+	COPIA DA VISUAL STUDIO: GUARDARE SOLO LE COSE UTILIZZATE
+
+
+Microsoft Visual Studio Enterprise 2019
+Versione 16.11.4
+VisualStudio.16.Release/16.11.4+31727.386
+Microsoft .NET Framework
+Versione 4.8.04084
+
+Edizione installata: Enterprise
+
+.NET Core Debugging with WSL   1.0
+.NET Core Debugging with WSL
+
+ADL Tools Service Provider   1.0
+This package contains services used by Data Lake tools
+
+ASA Service Provider   1.0
+
+ASP.NET and Web Tools 2019   16.11.75.64347
+ASP.NET and Web Tools 2019
+
+ASP.NET Web Frameworks and Tools 2019   16.11.75.64347
+Per altre informazioni, vedere https://www.asp.net/
+
+Azure Data Lake Node   1.0
+This package contains the Data Lake integration nodes for Server Explorer.
+
+Azure Data Lake Tools for Visual Studio   2.6.1000.0
+Microsoft Azure Data Lake Tools for Visual Studio
+
+Azure Functions and Web Jobs Tools   16.11.75.64347
+Azure Functions and Web Jobs Tools
+
+Azure Stream Analytics Tools for Visual Studio   2.6.1000.0
+Microsoft Azure Stream Analytics Tools for Visual Studio
+
+BusinessObjectEditor   1.0
+Information about my package
+
+ConvertToDevExtremeCommand Extension   1.0
+ConvertToDevExtremeCommand Visual Studio Extension Detailed Info
+
+Cookiecutter   16.11.21196.2
+Fornisce gli strumenti per la ricerca, la creazione di un'istanza e la personalizzazione dei modelli in formato Cookiecutter.
+
+CreateLayoutWizard   1.0
+Create layout wizard.
+
+DevExpress Reporting Extension   1.3
+A Visual Studio extension that invokes the Report Designer editor for report definition VSREPX files.
+
+DevExpress Reporting Tools Extension   1.0
+Extends Visual Studio with tools required for the Report Designer editor.
+
+DevExpress.DeploymentTool   1.0
+A useful tool for deploying DevExpress assemblies.
+
+DevExpress.ExpressApp.Design.DynamicPackage   1.0
+DevExpress VSIX Package
+
+DevExpress.ExpressApp.DesignPackage   1.0
+DevExpress VSIX Package
+
+DevExpress.Win.LayoutAssistant Extension   1.0
+DevExpress.Win.LayoutAssistant Visual Studio Extension Detailed Info
+
+Entity Framework 6 Power Tools   0.9.5
+Preview of useful design-time DbContext features, added to the Visual Studio Solution Explorer context menu.
+
+When right-clicking on a file containing a derived DbContext class, the following context menu functions are supported:
+1) View Entity Data Model (Read-only) - Displays a read-only view of the Code First model in the Entity Model Designer.
+2) View Entity Data Model XML - Displays the EDMX XML representing the underlying Code First model.
+3) View Entity Data Model DDL SQL - Displays the DDL SQL corresponding to the SSDL in the underlying EDM Model.
+4) Generate Views - Generates pre-compiled views used by the EF runtime to improve start-up performance. Adds the generated views file to the containing project.
+
+When right-clicking on an Entity Data Model (*.edmx) file, the following context menu function is supported:
+Generate Views - Generates pre-compiled views used by the EF runtime to improve start-up performance. Adds the generated views file to the containing project.
+
+Estensione Debug snapshot   1.0
+Informazioni dettagliate su estensione Debug snapshot di Visual Studio
+
+Estensione IntelliCode   1.0
+Informazioni dettagliate sull'estensione IntelliCode di Visual Studio
+
+Estensioni per Strumenti contenitore di Visual Studio   1.0
+Consente di visualizzare, gestire ed eseguire la diagnosi dei contenitori all'interno di Visual Studio.
+
+Gestione pacchetti NuGet   5.11.0
+Gestione pacchetti NuGet in Visual Studio. Per altre informazioni su NuGet, visitare il sito Web https://docs.nuget.org/
+
+IBM Database Add-Ins   11.5.0.2
+IBM Database Add-Ins for Visual Studio. Copyright(c) IBM Corporation. All rights reserved
+
+Microsoft Azure HDInsight Azure Node   2.6.1000.0
+HDInsight Node under Azure Node
+
+Microsoft Azure Hive Query Language Service   2.6.1000.0
+Language service for Hive query
+
+Microsoft Azure Stream Analytics Language Service   2.6.1000.0
+Language service for Azure Stream Analytics
+
+Microsoft Azure Stream Analytics Node   1.0
+Azure Stream Analytics Node under Azure Node
+
+Microsoft JVM Debugger   1.0
+Provides support for connecting the Visual Studio debugger to JDWP compatible Java Virtual Machines
+
+Microsoft MI-Based Debugger   1.0
+Provides support for connecting Visual Studio to MI compatible debuggers
+
+Microsoft Visual Studio Tools per contenitori   1.2
+Consente di sviluppare, eseguire e convalidare applicazioni ASP.NET Core nell'ambiente di destinazione. Premere F5 per modificare l'applicazione direttamente in un contenitore senza debug oppure CTRL+F5 per modificare e aggiornare l'app senza ricompilare il contenitore.
+
+Pacchetto host dell'adattatore di debug di Visual Studio Code   1.0
+Livello di interoperabilità per l'hosting degli adattatori di debug di Visual Studio Code in Visual Studio
+
+ProjectServicesPackage Extension   1.0
+ProjectServicesPackage Visual Studio Extension Detailed Info
+
+Python   16.11.21196.2
+Fornisce IntelliSense, progetti, modelli, debug, finestre interattive e altri supporti per gli sviluppatori Python.
+
+Python - Supporto Conda   16.11.21196.2
+Supporto Conda per progetti Python.
+
+Python - Supporto Django   16.11.21196.2
+Fornisce i modelli e l'integrazione per il framework Web Django.
+
+Python - Supporto profilatura   16.11.21196.2
+Supporto profilatura per progetti Python.
+
+Razor (ASP.NET Core)   16.1.0.2122504+13c05c96ea6bdbe550bd88b0bf6cdddf8cde1725
+Provides languages services for ASP.NET Core Razor.
+
+SQL Server Data Tools   16.0.62107.28140
+Microsoft SQL Server Data Tools
+
+Strumenti C#   3.11.0-4.21403.6+ae1fff344d46976624e68ae17164e0607ab68b10
+Componenti di C# usati nell'IDE. A seconda del tipo e delle impostazioni del processo, è possibile che venga usata una versione diversa del compilatore.
+
+Strumenti comuni di Azure   1.10
+Fornisce servizi comuni da usare con Servizi mobili di Azure e gli strumenti di Microsoft Azure.
+
+Strumenti del Servizio app di Azure versione 3.0.0   16.11.75.64347
+Strumenti del Servizio app di Azure versione 3.0.0
+
+Strumenti di Microsoft Azure per Visual Studio   2.9
+Supporto per i progetti di Servizi cloud di Azure
+
+Strumenti di recapito continuo Microsoft per Visual Studio   0.4
+Consente di semplificare la configurazione delle pipeline Azure DevOps direttamente dall'IDE di Visual Studio.
+
+Strumenti di Visual Basic   3.11.0-4.21403.6+ae1fff344d46976624e68ae17164e0607ab68b10
+Componenti di Visual Basic usati nell'IDE. A seconda del tipo e delle impostazioni del processo, è possibile che venga usata una versione diversa del compilatore.
+
+Strumenti TypeScript   16.0.30526.2002
+Strumenti TypeScript per Microsoft Visual Studio
+
+ToolWindowHostedEditor   1.0
+Hosting json editor into a tool window
+
+Visual F# Tools   16.11.0-beta.21322.6+488cc578cafcd261d90d748d8aaa7b8b091232dc
+Microsoft Visual F# Tools
+
+Visual Studio Tools per contenitori   1.0
+Visual Studio Tools per contenitori
+
+
+
+
+
+
+
+
