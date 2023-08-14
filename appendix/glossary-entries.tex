@@ -28,3 +28,38 @@
     sort=wms,
     description={ nel contesto della gestione di magazzino \emph{Warehouse Management System} (ing. sistema di gestione di magazzino) è una soluzione software che offre visibilità sull'intero inventario aziendale e gestisce le operazioni di evasione degli ordini dal centro di distribuzione allo scaffale del negozio di destinazione}
 }
+\newglossaryentry{Simulazione di prelievo} {
+    name=\glslink{Simulazione di prelievo}{simulazione di prelievo},
+    text=simulazione di prelievo,
+    sort=simulazione di prelievo,
+    description={ una \emph{simulazione di prelievo} è l'esecuzione di una o più missioni di prelievo.
+    Il numero di missioni di prelievo da eseguire dipende dal numero di ordini cliente da preparare durante la simulazione
+    e dalla dimensione del carrello utilizzato per prelevare gli articoli dal magazzino sotto test in quanto il 
+    numero di missioni di prelievo da eseguire è inversamente proporzionale alla dimensione del carrello.
+    Nel contesto applicativo del progetto il carrello può contenere un solo ordine per sezione e non vengono tenuti in 
+    considerazione altri vincoli dovuti alle proprietà fisiche degli articoli da prelevare.
+    Lo scopo principale di una simulazione di prelievo è quindi tenere traccia dello stato delle sezioni del carrello 
+    ad ogni fermata per ogni missione di prelievo e fornire all'utente i dati di interesse per valutare la bontà di una
+    configurazione di magazzino in termini di numero di fermate effettuate e distanza percorsa al termine di tutte le missioni 
+    di prelievo. 
+    }}
+\newglossaryentry{Missione di prelievo} {
+    name=\glslink{Missione di prelievo}{missione di prelievo},
+    text=missione di prelievo,
+    sort=missione di prelievo,
+    description={ una \emph{missione di prelievo} consiste nel completare un numero definito di ordini cliente
+    utilizzando un carrello che partendo dall'inizio del magazzino sotto test e percorrendolo
+    senza saltare ubicazioni e senza la possibilità di retrocedere verso ubicazioni già
+    visitate preleva gli articoli che compongono gli ordini.
+    Il numero di ordini cliente coinvolti non può superare la dimensione del carrello utilizzato.
+    Nel contesto applicativo del progetto la dimensione del carrello corrisponde al numero massimo di ordini che può 
+    ospitare durante una missione di prelievo.
+    }}
+\newglossaryentry{Articolo associato} {
+    name=\glslink{Articolo associato}{articolo associato},
+    text=articolo associato,
+    sort=articolo associato,
+    description={ un \emph{articolo associato} ad un altro articolo si definisce tale quando è presente in almeno un 
+    ordine cliente con quell'articolo.
+    }
+}
