@@ -1,22 +1,167 @@
 \chapter{Descrizione dello stage}
 \label{cap:descrizione-stage}
 
-\intro{Breve introduzione al capitolo}\\
-
+In questo capitolo verrà descritto lo stage, gli obiettivi attesi, l'analisi dei requisiti e la pianificazione del lavoro antecedente all'inizio dello stage in 
+modo da fornire i concetti fondamentali per comprendere al meglio i capitoli che seguiranno.
 \section{Introduzione al progetto}
+%intro
+La gestione del magazzino per lo stoccaggio delle merci assume un ruolo chiave quando si vogliono aumentare 
+le performance aziendali sia in fase di entrata merce sia nella fase di preparazione degli ordini 
+cliente da evadere. Un corretto stoccaggio delle merci nelle ubicazioni di magazzino consente infatti di ridurre i tempi di 
+preparazione degli ordini e di rendere più efficienti i propri magazzinieri.
+
+%scopo del progetto
+Il progetto si propone di sviluppare un sistema che andrà ad integrarsi al WMS e dovrà supportarlo nella definizione delle ubicazioni 
+più opportune per lo stoccaggio dei vari articoli in modo da ottimizzare i tempi di preparazione degli ordini.
+% considerazioni
+Questo dovrà essere fatto tenendo conto sia dell’efficienza che si vuole ottenere nel prelievo degli articoli sia rispettando regole e condizioni imposte dal contesto.
+Infatti, la disposizione degli articoli all'interno del magazzino è fortemente influenzata dai vincoli fisici dovuti agli articoli, dal mezzo con cui questi vengono prelevati, dalla
+stagionalità di vendita e dal fatto che le correlazioni tra articoli potrebbero variare nel tempo.
+A causa della variazione dei vincoli potrebbe essere necessaria una nuova disposizione degli articoli a magazzino che verrà effettuata su 
+decisione del cliente seguendo le indicazioni del sistema solo quando risulta conveniente in quanto la riorganizzazione del magazzino è un processo dispendioso e anche 
+portando ad una migliore disposizione degli articoli i costi di riorganizzazione potrebbero essere maggiori dei ricavi che si otterrebbero dall'incremento dell'efficienza di prelievo.
 
 \section{Analisi preventiva dei rischi}
-
 Durante la fase di analisi iniziale sono stati individuati alcuni possibili rischi a cui si potrà andare incontro.
 Si è quindi proceduto a elaborare delle possibili soluzioni per far fronte a tali rischi.\\
-
-\begin{risk}{Performance del simulatore hardware}
-    \riskdescription{le performance del simulatore hardware e la comunicazione con questo potrebbero risultare lenti o non abbastanza buoni da causare il fallimento dei test}
-    \risksolution{coinvolgimento del responsabile a capo del progetto relativo il simulatore hardware}
-    \label{risk:hardware-simulator} 
+\begin{risk}{Inesperienza tecnologica}
+    \riskdescription{Le tecnologie da utilizzare sono sconosciute ed è richiesto del tempo per il loro apprendimento}
+    \risksolution{
+        \begin{itemize}
+            \item lettura della documentazione ufficiale delle tecnologie coinvolte e assistenza da parte del tutor per velocizzare il processo di apprendimento;
+            \item svolgere dei tutorial su problemi semplici prima di utilizzare la tecnologia di interesse sul problema riguardante il progetto;
+            \item individuare quali sono le parti che caratterizzano maggiormente la tecnologia e quali sono le operazioni più ricorrenti gestite da tale tecnologia.
+        \end{itemize}
+    }
+    \label{risk:inesperienza-tecnologica} 
+\end{risk}
+\begin{risk}{Contesto applicativo sconosciuto}
+    \riskdescription{Il contesto della gestione di magazzino e tutte le operazioni coinvolte sono sconosciute}
+    \begin{itemize}
+        \item studio individuale dei concetti principali sulla gestione di magazzino da documenti forniti dal tutor e studiando da fonti attendibili presenti nel web;
+        \item prevedere una trasferta dal cliente per discutere sulla morfologia del magazzino, mezzi utilizzati, operazioni effettuate e altri vincoli;
+        \item comunicazione tra tutor e cliente e successivo riferimento delle nuove informazioni utili al tirocinante;
+        \item tenere aggiornato il glossario di progetto per comprendere al meglio la terminologia utilizzata dai più esperti del settore ed evitare fraintendimenti.
+    \end{itemize}
+    \label{risk:contesto-applicativo-sconosciuto} 
+\end{risk}
+\begin{risk}{Incomprensioni dei requisiti}
+    \riskdescription{I requisiti potrebbero non venire compresi a pieno portando a divergere dalle aspettative del cliente o dagli obiettivi di progetto}
+    \begin{itemize}
+        \item confronti frequenti tra tutor e tirocinante in modo da limitare le incomprensioni;
+        \item alla fine di ogni discussione tra tutor e tirocinante fare un breve resoconto verbale dei concetti principali discussi.
+    \end{itemize}
+    \label{risk:incomprensioni-dei-requisiti} 
+\end{risk}
+\begin{risk}{Assenza del tutor in azienda}
+    \riskdescription{Il tutor potrebbe essere assente}
+    \risksolution{contattare il tutor tramite il recapito telefonico o mail forniti in precedenza se necessario.}
+    \label{risk:assenza-del-tutor-in-azienda} 
+\end{risk}
+\begin{risk}{Ritardi sulla tabella di marcia pianificata}
+    \riskdescription{Alcune delle attività pianificate potrebbero richiedere più tempo del previsto}
+    \begin{itemize}
+        \item svolgere per prime le attività più importanti che permettono di soddisfare i requisiti obbligatori;
+        \item scegliere cosa escludere da quanto pianificato nel caso ci si rendesse conto che la mole di lavoro supera le risorse a disposizione;
+        \item contattare il cliente per ridefinire le sue priorità se necessario.
+    \end{itemize}
+    \label{risk:ritardi-sulla-tabella-di-marcia-pianificata} 
+\end{risk}
+\begin{risk}{Cambiamento dei requisiti in corso d'opera}
+    \riskdescription{Alcuni requisiti stabiliti potrebbero subire delle variazioni}
+    \begin{itemize}
+        \item utilizzo di un sistema di versionamento per la gestione dello storico del progetto in modo da riportarlo ad una versione precedente se si dovesse ritenere utile;
+        \item scegliere cosa escludere da quanto pianificato nel caso ci si rendesse conto che la mole di lavoro supera le risorse a disposizione;
+        \item contattare il cliente per ridefinire le sue priorità;
+        \item utilizzare le buone pratiche per lo sviluppo di un progetto imparate durante il corso di studi per facilitare le modifiche non previste. In particolare durante il periodo di 
+        progettazione utilizzare le metodologie opportune per minimizzare le dipendenze tra le parti che compongono il sistema.
+    \end{itemize}
+    \label{risk:cambiamento-dei-requisiti-in-corso-opera} 
+\end{risk}
+\begin{risk}{Basse performance del sistema in sviluppo}
+    \riskdescription{Il calcolo della disposizione degli articoli a magazzino da parte del sistema in svilupppo potrebbe richiedere molto tempo a causa dell'elevato numero articoli coinvolti}
+    \begin{itemize}
+        \item salvare le informazioni ricorrenti a database in modo che il sistema non debba ricalcolarle ad ogni esecuzione;
+        \item migliorare le query che richiedono grandi quantità di dati al database valutando se è possibile semplificarle per evitare operazioni onerose. Valutare l'utilizzo degli indici.
+    \end{itemize}
+    \label{risk:basse-performance-del-sistema-in-sviluppo} 
+\end{risk}
+\begin{risk}{Presenza di malfunzionamenti nel sistema}
+    \riskdescription{La rilevazione degli errori a runtime potrebbe essere difficoltosa in alcuni casi}
+    \begin{itemize}
+        \item scomporre il problema in sottoproblemi in modo da isolare il più possibile la causa del malfunzionamento;
+        \item creare delle eccezioni specifiche che mostrino a schermo dei messaggi di errore in modo da individuare più facilmente la causa del malfunzionamento;
+        \item utilizzare il debugger per individuare anomalie che possono far intuire la causa del malfunzionamento. Utilizzare i breakpoint in modo da interrompere l'esecuzione del 
+        programma nel punto in cui è presente il malfuzionamento per capirne la causa.
+    \end{itemize}
+    \label{risk:presenza-di-malfunzionamenti-nel-sistema}
 \end{risk}
 
 \section{Requisiti e obiettivi}
+Durante la stesura del piano di lavoro necessaria all'avvio dello stage sono stati fissati i requisiti di progetto.
+I requisiti di seguito riportati hanno un codice requisito che ne permette l'identificazione, una descrizione e sono classificati in base alla loro importanza.\\
+La classificazione comprende le seguenti diciture:\\\\
+\textbf{OB}: rappresentano i requisiti obbligatori, vincolanti, che dovranno necessariamente essere soddisfatti;\\
+\textbf{DE}: rappresentano i requisiti desiderabili, non vincolanti, ma dal riconoscibile valore aggiunto;\\
+\textbf{FA}: rappresentano i requisiti facoltativi, rappresentanti valore aggiunto non strettamente competitivo.\\
 
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{|Y|Z|Y|}
+    \hline
+    \textbf{Requisito} & \textbf{Descrizione} & \textbf{Classificazione}\\
+    \hline
+    R1 & Sviluppo programmi per inserimento dei vincoli & OB \\
+    \hline
+    R2 & Sviluppo programma per la lettura e preparazione dei dati dai movimenti di magazzino & OB \\
+    \hline
+    R3 & Sviluppo del sistema di individuazione delle correlazioni tra i vari articoli e proposta delle ubicazioni & OB \\
+    \hline
+    R4 & Acquisizione di competenze sull’utilizzo di algoritmi di Ricerca Operativa e Machine Learning e applicazione in un caso reale & OB \\
+    \hline
+    R5 & Visualizzazione 2D del magazzino e delle ubicazioni suggerite & DE \\
+    \hline
+    R6 & Visualizzazione attraverso dashboard e oggetti grafici dei dati raccolti ed elaborati utilizzati per definire la proposta suggerita & DE \\
+    \hline
+    R7 & Utilizzo del multithreading nelle fasi in cui è richiesta una maggiore capacità di calcolo & FA \\
+    \hline
+    \end{tabularx}
+    \caption{Tabella del tracciamento dei requisiti di progetto}
+    \end{table}
 
 \section{Pianificazione}
+
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{|Y|Z|}
+    \hline
+    \textbf{Durata in ore} & \textbf{Descrizione attività} \\
+    \hline
+    24 & Analisi dello user case, del sistema ERP e definizione del problema \\
+    \hline
+    20 & Analisi dei requisiti e stesura della relativa documentazione \\
+    \hline
+    32 & Studio delle tecnologie aziendali necessarie allo sviluppo del 
+    modulo (linguaggio di programmazione C\#, .NET Framework, 
+    componenti DevExpress, database Informix e altre tecnologie) \\
+    \hline
+    80 & Studio di algoritmi e tecniche applicabili nel caso di studio (es.
+    ambito Ricerca operativa e Machine Learning) \\
+    % \hline
+    % 112 & Sviluppo delle componenti:
+    % \begin{itemize}
+    %     \item Sviluppo programmi per l’inserimento dei vincoli;
+    %     \item Sviluppo procedura di reperimento e preparazione dei 
+    %     dati di magazzino;
+    %     \item Sviluppo dell’algoritmo per l’individuazione delle 
+    %     correlazioni tra le varie referenze e proposta delle 
+    %     ubicazioni. \\
+    % \end{itemize}
+    \hline
+    20 & Validazione progetto \\
+    \hline
+    24 & Stesura della documentazione del prodotto sviluppato \\
+    \hline
+    \end{tabularx}
+    \caption{Tabella del tracciamento dei requisiti di progetto}
+    \end{table}
