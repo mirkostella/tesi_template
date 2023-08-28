@@ -20,14 +20,104 @@ Descrizione Tecnologia 2
 \section{Progettazione}
 \label{sec:progettazione}
 
-\subsubsection{Namespace 1} %**************************
-Descrizione namespace 1.
-
-\begin{namespacedesc}
-    \classdesc{Classe 1}{Descrizione classe 1}
-    \classdesc{Classe 2}{Descrizione classe 2}
-\end{namespacedesc}
-
+\subsection{Classi utili al modello di business} %**************************
+Di seguito sono riportate le classi che vengono utilizzate dal modello di business.
+\\\\
+\textbf{Magazzino}
+\\
+Rappresenta un magazzino sul quale può essere eseguita una \gls{simulazione di prelievog} o i
+test sul numero di fermate e sulla distanza percorsa per completarla.
+Un magazzino contiene gli articoli che vengono disposti nei punti di prelievo a seconda del passo associazione o della disposizione degli articoli presenti all'interno del magazzino cliente.
+Un punto di prelievo può contenere un solo articolo.
+Tramite il carrello vengono prelevati gli articoli fino al completamento della missione di prelievo.
+La posizione del carrello all'interno del magazzino viene indicata dalla posizione in cui si trova la sua ultima sezione che è la sezione ad indice minore rispetto alle posizioni di prelievo.\\\\
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item Carrello (Associazione): utilizzata per svolgere le simulazioni di prelievo;
+    \item Articolo (Associazione): utilizzata per inizializzare i punti di prelievo.\\
+\end{itemize}
+\textbf{I metodi principali della classe sono}:
+\\\\
+\textit{Costruttori}:
+\begin{itemize}
+    \item Magazzino(in dim:int, in car:Carrello)\\
+    Crea un'istanza di un magazzino con dim punti di prelievo e utilizza il carrello car per scorrere e prelevare gli articoli dai punti di prelievo;\\
+    dim: dimensione del magazzino che corrisponde al numero di ubicazioni e quindi di articoli che possono essere stoccati all'interno dei punti di prelievo;\\
+    car: carrello utilizzato per scorrere i punti di prelievo e prelevarne gli articoli.\\
+\end{itemize}
+\textit{Metodi per popolare il magazzino}:
+\begin{itemize}
+    \item PopolaMagazzino(in articoli:List<Articolo>): void\\
+    Inizializza i punti di prelievo con gli elementi del parametro articoli seguendo l'ordine in cui si trovano all'interno della lista;
+    \item PopolaMagazzino(in passo:int, in articoli:List<Articolo>, in strut\_associati: Dictionary<string-Dictionary<string-int> >): void\\
+    Inizializza i punti di prelievo con gli elementi della lista articoli seguendo il passo fornito e la strut\_associati.\\
+    passo: rappresenta il numero di articoli associati da disporre nelle posizioni contigue dei punti di prelievo.\\
+    articoli: rappresenta gli articoli da utilizzare per inizializzare i punti di prelievo.\\
+    strut\_associati: dizionario che ha come chiavi i codici univoci degli articoli presenti nella lista articoli e come valori i dizionari aventi come chiavi 
+    i codici articoli che sono associati all'articolo chiave e come valori il numero di volte che l'associato compare all'interno di un ordine cliente assieme all'articolo chiave.\\
+\end{itemize}
+\textit{Metodi per la gestione del carrello}:
+\begin{itemize}
+    \item GetPosCarrello(): int\\
+    Ritorna la posizione della sezione ad indice minore del carrello;
+    \item GetPuntiPrelievoCarrello(): Array<Articolo>\\
+    Ritorna gli articoli che corrispondono al range di prelievo del carrello quindi gli articoli che sono prelevabili dalla posizione in cui si trova il carrello;
+    \item CaricaCoperturaCarrello(): void\\
+    Carica nelle corrispettive sezioni del carrello gli articoli che sono target nella missione in corso e che sono all'interno della copertura del carrello;
+    \item GetCoperturaCarrello(): List<int>\\
+    Ritorna la lista di indici delle posizioni di prelievo all'interno della copertura del carrello;
+    \item MuoviCodaCarrello(in pos:int): void\\
+    Sposta la coda del carrello alla posizione indicata dal parametro pos.\\
+\end{itemize}
+\textit{Metodi per l'esecuzione dei test}:
+\begin{itemize}
+    \item TestValutazioneFermate(): int\\
+    Ritorna il numero di fermate impiegate dal carrello per completare la missione di prelievo che gli è stata assegnata;
+    \item TestValutazioneDistanza(): int\\
+    Ritorna la distanza percorsa dal carrello per completare la missione di prelievo che gli è stata assegnata.\\
+\end{itemize}
+\textit{Metodi privati di utilità}:
+\begin{itemize}
+    \item ControlloArticoliMissionePresenti(): bool\\
+    Ritorna true se tutti gli articoli coinvolti nella missione assegnata al carrello sono presenti all'interno dei punti di prelievo altrimenti false.
+    Nel caso ritorni true viene garantito che la missione assegnata al carrello possa essere completata con successo;
+    \item GetIndiceProssimoArtInMissioni(): int\\
+    Ritorna l'indice del prossimo articolo da prelevare per la missione assegnata al carrello;
+    \item GetMigliorAssociato(in cod:string, in strut:Dictionary<string-int>): string\\
+    Metodo di utilità utilizzato principalmente durante il popolamento del magazzino.\\
+\end{itemize}       
+\\\\
+\textbf{Carrello}
+\\
+Rappresenta il carrello fisico che si muove all'interno di un magazzino per prelevare gli articoli dai punti di prelievo.
+Il numero di posti corrisponde al numero di sezioni e ogni sezione può contenere gli articoli riguardanti un solo ordine cliente.
+Dato che l'obiettivo del progetto è focalizzato sullo stoccaggio della merce è stato assunto che tutti gli articoli appartenenti ad un ordine 
+da completare possano essere collocati nelle sezioni relative senza tenere conto di vincoli fisici.
+La classe presenta due contatori che tengono conto della distanza percorsa (espressa in punti di prelievo visitati) e il numero di fermate effettuate
+(il punto da cui parte il carrello non viene contata).
+\\\\
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item Missione (Associazione): corrisponde alla missione assegnata al carrello durante la simulazione di prelievo.\\
+\end{itemize}
+\textbf{I metodi principali della classe sono}:
+\\\\
+\textit{Costruttori}:
+\begin{itemize}
+    \item Carrello(in n_posti:int, in mis:Missione):\\
+    Crea un'istanza di un carrello con n\_posti e gli assegna la missione mis.\\
+\end{itemize}
+\textit{Metodi pubblici}:
+\begin{itemize}
+    \item Carica(in cod_art:string, in pos_prelievo:int): void.\\
+    \item Pieno(): bool\\
+    Ritorna true se tutte le sezioni del carrello sono occupate da almeno un articolo ovvero quando il numero di posti occupati 
+    corrisponde al numero di posti totale, altrimenti false;
+    \item Svuota(): void\\
+    Imposta il numero di posti occupati a zero;
+    \item Reset(): void\\  
+    Imposta il numero di posti occupati,il numero di fermate effettuate e la distanza percorsa a zero; inoltre ripristina la missione che gli è stata assegnata;
+\end{itemize} 
 
 \section{Design Pattern utilizzati}
 
