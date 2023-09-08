@@ -20,6 +20,10 @@ Descrizione Tecnologia 2
 \section{Progettazione}
 \label{sec:progettazione}
 
+\subsection{Classi modello di business} %**************************
+Il modello di business costituisce la logica dell'applicazione.
+Le classi che ne fanno parte sono:
+
 \subsection{Classi utili al modello di business} %**************************
 Di seguito sono riportate le classi che vengono utilizzate dal modello di business.
 \\\\
@@ -86,38 +90,104 @@ La posizione del carrello all'interno del magazzino viene indicata dalla posizio
     \item GetMigliorAssociato(in cod:string, in strut:Dictionary<string-int>): string\\
     Metodo di utilità utilizzato principalmente durante il popolamento del magazzino.\\
 \end{itemize}       
-\\\\
-\textbf{Carrello}
-\\
+\textbf{Carrello}\\
 Rappresenta il carrello fisico che si muove all'interno di un magazzino per prelevare gli articoli dai punti di prelievo.
 Il numero di posti corrisponde al numero di sezioni e ogni sezione può contenere gli articoli riguardanti un solo ordine cliente.
 Dato che l'obiettivo del progetto è focalizzato sullo stoccaggio della merce è stato assunto che tutti gli articoli appartenenti ad un ordine 
 da completare possano essere collocati nelle sezioni relative senza tenere conto di vincoli fisici.
 La classe presenta due contatori che tengono conto della distanza percorsa (espressa in punti di prelievo visitati) e il numero di fermate effettuate
-(il punto da cui parte il carrello non viene contata).
-\\\\
+(il punto da cui parte il carrello non viene contata).\\
 \textbf{Dipendenze}:
 \begin{itemize}
     \item Missione (Associazione): corrisponde alla missione assegnata al carrello durante la simulazione di prelievo.\\
 \end{itemize}
-\textbf{I metodi principali della classe sono}:
-\\\\
-\textit{Costruttori}:
+\textbf{I metodi principali della classe sono}:\\
+\textit{Costruttori}:\\
 \begin{itemize}
-    \item Carrello(in n_posti:int, in mis:Missione):\\
+    \item Carrello(in n\_posti:int, in mis:Missione):\\
     Crea un'istanza di un carrello con n\_posti e gli assegna la missione mis.\\
 \end{itemize}
-\textit{Metodi pubblici}:
+\textit{Metodi pubblici}:\\
 \begin{itemize}
-    \item Carica(in cod_art:string, in pos_prelievo:int): void.\\
+    \item Carica(in cod\_art:string, in pos\_prelievo:int): void\\
+    Imposta la posizione di prelievo del target missione corrispondente al cod\_art alla pos\_prelievo;
     \item Pieno(): bool\\
     Ritorna true se tutte le sezioni del carrello sono occupate da almeno un articolo ovvero quando il numero di posti occupati 
     corrisponde al numero di posti totale, altrimenti false;
     \item Svuota(): void\\
     Imposta il numero di posti occupati a zero;
     \item Reset(): void\\  
-    Imposta il numero di posti occupati,il numero di fermate effettuate e la distanza percorsa a zero; inoltre ripristina la missione che gli è stata assegnata;
+    Imposta il numero di posti occupati,il numero di fermate effettuate e la distanza percorsa a zero; inoltre ripristina la missione che gli è stata assegnata.\\
 \end{itemize} 
+\textbf{Missione}\\
+Rappresenta la missione assegnata al carrello che deve essere completata durante la simulazione di prelievo prelevando i target missione dai punti di prelievo.\\
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item Target (Associazione): un target corrisponde ad un articolo da prelevare per completare la missione.
+\end{itemize}
+\textbf{I metodi principali della classe sono}:\\
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item Missione(in targets:List<Target>)\\
+    Crea un'istanza di una missione con lista target uguale a targets parametro formale;
+    \item Missione(in missione:Missione)\\
+    Costruttore di copia profonda.\\
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item SetPosPrelievoTarget(in cod\_art:string, in pos\_prelievo:int): void\\
+    Imposta la posizione di prelievo a pos\_prelievo dell'articolo con codice articolo cod\_art nella lista dei target;
+    \item MissioneCompletata(): bool\\
+    Ritorna true se tutti i target missione all'interno della lista target hanno una posizione di prelievo diversa da -1 altrimenti false.
+    Un target con posizione di prelievo diversa da -1 è stato prelevato dalla posizione di prelievo indicata dal valore impostato.
+    \item Ripristina(): void\\
+    Imposta tutte le posizioni di prelievo dei target missione a -1.
+    \item GetTargets(): List<Target>\\
+    Ritorna la lista dei target missione.\\
+\end{itemize} 
+\textbf{Target}\\
+Rappresenta un articolo da prelevare per completare una missione di prelievo.
+Un target viene identificato dal codice articolo da prelevare, dall'ordine a cui appartiene (numero ordine e anno ordine) e dalla posizione
+di prelievo da cui è stato prelevato (se non ancora prelevato la posizione di prelievo ha valore -1)\\
+\textbf{I metodi principali della classe sono}:\\
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item Target(in cod\_art:string, in nr\_ord:int, in anno\_ord:int)\\
+    Crea un'istanza di un target assegnando ai campi dati corrispondenti i parametri formali;
+    \item Target(in target:Target)\\
+    Costruttore di copia profonda.\\
+\end{itemize}
+\textit{Metodi pubblici}:\\
+I metodi che offre la classe sono i metodi getter e setter per ricavare o impostare i valori dei campi dati.\\
+\textbf{ErgdisEntities}\\
+Classe che contiene i riferimenti agli oggetti che rappresentano le entità di interesse fornite dal DB.
+Viene utilizzata per interfacciarsi con il DB sia in lettura che in scrittura.
+Tutte le dipendenze di cui necessita la classe vengono generate automaticamente da Entity Framework. Per aggiungere un'entità basta aggiornare
+la classe utilizzando le funzionalità offerte dall'IDE di sviluppo tramite interfaccia grafica.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item DettagliOrdiniCliente (Associazione): classe che rappresenta i dati presenti a database nella tabella DettagliOrdiniCliente.\\
+    La tabella è strutturata in modo che ogni record contiene le informazioni per un articolo presente in un ordine cliente in modo da
+    fornirne il codice, il numero dell'ordine e l'anno dell'ordine.
+    \item AnagraficaArticoli (Associazione): \\
+    \item AnagraficaArticoliMagazzinoCliente (Associazione): \\
+    \item FrequenzeArticoli (Associazione): classe che rappresenta i dati presenti a database nella tabella FrequenzaArticoli.
+    Tiene traccia dei codici articoli e delle frequenze di vendita di ciascuno ovvero quante volte gli articoli compaiono all'interno degli 
+    ordini cliente. La classe permette di velocizzare i tempi di caricamento a runtime dell'applicazione in quanto avendo salvato a database
+    le frequenze di vendita non è necessario ricalcolarle ogni volta che si avvia l'applicazione. Questo ha portato ad un aumento evidente delle 
+    performance durante il caricamento iniziale della finestra principale;\\
+    \item AssociazioniArticoli (Associazione): classe che rappresenta i dati presenti a database nella tabella AssociazioniArticoli.
+    Presenta i campi cod\_art e cod\_art\_assoc e con il campo freq\_assoc viene memorizzato il numero di volte che il primo articolo è
+    presente all'interno degli ordini clienti assieme al secondo articolo.
+    Anche questa classe permette di velocizzare i tempi di caricamento evitando di ricalcolare ad ogni esecuzione le frequenze di associazione
+    tra gli articoli.\\
+    \item Database (Associazione): classe utilizzata per comunicare con il database.\\
+\end{itemize}
+
+
+
+
+
 
 \section{Design Pattern utilizzati}
 
