@@ -161,16 +161,22 @@ di prelievo da cui è stato prelevato (se non ancora prelevato la posizione di p
 I metodi che offre la classe sono i metodi getter e setter per ricavare o impostare i valori dei campi dati.\\
 \textbf{ErgdisEntities}\\
 Classe che contiene i riferimenti agli oggetti che rappresentano le entità di interesse fornite dal DB.
-Viene utilizzata per interfacciarsi con il DB sia in lettura che in scrittura.
+Viene utilizzata per interfacciarsi al DB.
 Tutte le dipendenze di cui necessita la classe vengono generate automaticamente da Entity Framework. Per aggiungere un'entità basta aggiornare
 la classe utilizzando le funzionalità offerte dall'IDE di sviluppo tramite interfaccia grafica.
 \textbf{Dipendenze}:
 \begin{itemize}
-    \item DettagliOrdiniCliente (Associazione): classe che rappresenta i dati presenti a database nella tabella DettagliOrdiniCliente.\\
+    \item DettagliOrdiniCliente (Associazione): \\
+    Classe che rappresenta i dati presenti a database nella tabella DettagliOrdiniCliente.\\
     La tabella è strutturata in modo che ogni record contiene le informazioni per un articolo presente in un ordine cliente in modo da
     fornirne il codice, il numero dell'ordine e l'anno dell'ordine.
     \item AnagraficaArticoli (Associazione): \\
+    Classe che rappresenta i dati presenti a database nella tabella AnagraficaArticoli.\\
+    La tabella è strutturata in modo che ogni record contiene le informazioni utili a reperire le informazioni relative ad ogni singolo articolo (codice articolo,descrizione,unità di misura ecc.).
     \item AnagraficaArticoliMagazzinoCliente (Associazione): \\
+    Classe che rappresenta i dati presenti a database nella tabella AnagraficaArticoliMagazzinoCliente.\\
+    La tabella è strutturata in modo che ogni record contiene le informazioni utili a reperire le informazioni relative ad ogni singolo articolo in relazione con il magazzino cliente.
+    Ad esempio un dato utile da ricavare da questa tabella potrebbe essere il codice del deposito in cui è stoccato l'articolo.
     \item FrequenzeArticoli (Associazione): classe che rappresenta i dati presenti a database nella tabella FrequenzaArticoli.
     Tiene traccia dei codici articoli e delle frequenze di vendita di ciascuno ovvero quante volte gli articoli compaiono all'interno degli 
     ordini cliente. La classe permette di velocizzare i tempi di caricamento a runtime dell'applicazione in quanto avendo salvato a database
@@ -181,8 +187,147 @@ la classe utilizzando le funzionalità offerte dall'IDE di sviluppo tramite inte
     presente all'interno degli ordini clienti assieme al secondo articolo.
     Anche questa classe permette di velocizzare i tempi di caricamento evitando di ricalcolare ad ogni esecuzione le frequenze di associazione
     tra gli articoli.\\
-    \item Database (Associazione): classe utilizzata per comunicare con il database.\\
+    \item Database (Associazione): classe utilizzata per interagire con il database.\\
 \end{itemize}
+
+\textbf{ComparatoreDiffPassiMagazzini}\\
+Classe utilizzata per confrontare i risultati dei test eseguiti tra configurazioni diverse di magazzini.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item Magazzino (Associazione): rappresenta i magazzini da confrontare.\\
+\end{itemize}
+\textbf{I metodi principali della classe sono}:\\
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item ComparatoreDiffPassiMagazzini(in magazzino1:Magazzino, in magazzino2:Magazzino, in inizio\_range:int, in fine\_range:int):\\
+    Crea un'istanza di ComparatoreDiffPassiMagazzini con magazzino1 e magazzino2 da confrontare ed imposta il range di ubicazioni all'interno dei magazzini da confrontare secondo i parametri inizio\_range e fine\_range.\\ 
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item GetDiffPosizioni(): int \\
+    Ritorna il numero di ubicazioni che non contengono gli stessi articoli agli indici corrispondenti nei punti prelievo.
+    Questo metodo viene utilizzato per confrontare configurazioni di magazzino che hanno passi associazione diversi in modo da poter capire quanti articoli non si trovano nelle stesse posizioni
+    rispetto a passi associazioni diversi;\\
+    \item GetDiffArticoli(): int \\
+    Ritorna il numero di articoli che non sono presenti nel primo magazzino e sono presenti all'interno del secondo magazzino.
+    Questo metodo viene utilizzato per confrontare configurazioni di magazzino che hanno passi diversi in modo da poter capire quanti articoli non si trovano all'interno del range in passi associazioni diversi;\\
+    \item GetCodArtRange(): List<string> \\
+    Ritorna i codici degli articoli che si trovano all'interno del range di confronto (tra inizio\_range e fine\_range compresi).\\
+\end{itemize} 
+\subsection{Classi utili alle viste}
+Di seguito sono riportate le classi che vengono utilizzate dalle viste per rappresentare le informazioni di interesse per l'utente.
+\\\\
+\textbf{ResocontoTest}\\
+Classe astratta che rappresenta un set di test eseguiti e ne raccoglie i risultati ottenuti ed altre informazioni tra le quali il nome e una descrizione testuale dei test eseguiti.
+\textbf{Estesa da}:
+\begin{itemize}
+    \item ResocontoTestCliente: raccoglie i test eseguiti sul magazzino cliente senza passo associazioni;
+    \item ResocontoTestErgon: raccoglie i risultati dei test sul magazzino Ergon con passo associazioni.\\
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item ResocontoTest(): utilizzato dalle sottoclassi per inizializzarne i campi dati.\\
+\end{itemize}
+\textit{Metodi pubblici}:\\
+I metodi messi a disposizione sono i getter e setter per il nome e la descrizione dei test presenti all'interno del resoconto.\\
+\textbf{ResocontoTestCliente}\\
+Classe che contiene i test effettuati sul magazzino cliente e ne contiene le informazioni di interesse.\\
+\textbf{Estende}:\\
+ResocontoTest\\
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item RisultatoTestCliente (Associazione): risultato di un test effettuato sul magazzino cliente.\\
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item ResocontoTestCliente(in risultati:List<RisultatoTestCliente>):\\
+    Crea un'istanza di ResocontoTestCliente che contiene i risultati dei test effettuati sul magazzino cliente.\\
+\end{itemize}
+\textit{Metodi pubblici}:\\
+I metodi pubblici della classe sono i getter e i setter per ricavare i valori dei campi dati.\\
+\textbf{ResocontoTestErgon}\\
+Classe che contiene i test effettuati sul magazzino Ergon e ne contiene le informazioni di interesse.\\
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item RisultatoTestErgon (Associazione): risultato di un test effettuato sul magazzino Ergon quindi con passo associazioni articoli.\\
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item ResocontoTestErgon(in risultati:List<RisultatoTestErgon>):\\
+    Crea un'istanza di ResocontoTestErgon che contiene i risultati dei test effettuati sul magazzino Ergon.
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item I metodi pubblici della classe sono i getter e i setter per ricavare i valori dei campi dati.\\
+\end{itemize} 
+\textbf{RisultatoTestCliente}\\
+Un RisultatoTestCliente rappresenta il risultato di un test avvenuto sul magazzino cliente senza passo associazioni utilizzando un carrello  per effettuare i prelievi 
+dalle posizioni di magazzino.
+Il risultato ha come campi dati il nome del cliente e il codice del deposito su cui avviene il test.\\
+\textbf{Estende}:\\
+RisultatoTestCarrello\\
+\textbf{Implementa}:\\
+RisultatoTestCarrello\\
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item RisultatoTestCliente(in nome\_cliente:string, in cod\_dep:string, in dimCarrello:int).\\
+    Crea un'istanza di RisultatoTestCliente ed imposta i campi dati con i parametri passati come parametri formali.\\
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item I metodi pubblici della classe sono i getter e i setter per ricavare i valori dei campi dati.\\
+\end{itemize} 
+\textbf{RisultatoTestDistanzaCliente}\\
+Rappresenta un risultato di un test distanza effettuato sul magazzino cliente e ne memorizza la distanza percorsa dal carrello per completare il test.\\
+\textbf{Estende}:\\
+RisultatoTestCliente\\
+\textbf{Implementa}:\\
+RisultatoTestDistanza\\
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item RisultatoTestDistanzaCliente(in nome\_cliente:string, in cod\_dep:string, in dimCarrello:int).\\
+    Crea un'istanza di RisultatoTestDistanzaCliente ed imposta i campi dati con i parametri passati come parametri formali.\\
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item I metodi pubblici della classe sono i getter e i setter per ricavare i valori dei campi dati.\\
+\end{itemize} 
+
+\textbf{RisultatoTestFermateCliente}\\
+Rappresenta un risultato di un test fermate effettuato sul magazzino cliente e ne memorizza il numero di fermate impiegate dal carrello per completare il test.\\
+\textbf{Estende}:\\
+RisultatoTestCliente\\
+\textbf{Implementa}:\\
+RisultatoTestFermate\\
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item RisultatoTestFermateCliente(in nome\_cliente:string, in cod\_dep:string, in dimCarrello:int).\\
+    Crea un'istanza di RisultatoTestFermateCliente ed imposta i campi dati con i parametri passati come parametri formali.\\
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item I metodi pubblici della classe sono i getter e i setter per ricavare i valori dei campi dati.\\
+\end{itemize}
+
+
+% \textbf{nome_classe}\\
+% descrizione
+% \textbf{Dipendenze}:
+% \begin{itemize}
+%     \item .\\
+% \end{itemize}
+% \textit{Costruttori}:\\
+% \begin{itemize}
+%     \item .\\
+% \end{itemize}
+% \textit{Metodi pubblici}:\\
+% \begin{itemize}
+%     \item .\\
+% \end{itemize} 
+
+% \item RisultatoTestCliente(in nome\_cliente:string, in cod_dep:string, in dimCarrello:int):\\
+% Crea un'istanza di RisultatoTestCliente utilizzando il nome del cliente, il codice del deposito sul quale viene effettuato il test e la 
+% dimensione del carrello utilizzato per completare gli ordini cliente per settare i relativi campi dati della classe.
 
 
 
