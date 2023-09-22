@@ -308,7 +308,101 @@ RisultatoTestFermate\\
 \begin{itemize}
     \item I metodi pubblici della classe sono i getter e i setter per ricavare i valori dei campi dati.\\
 \end{itemize}
+\textbf{RisultatoTestCarrello}\\
+Rappresenta un risultato di un test effettuato utilizzando un carrello per il prelievo degli articoli dal magazzino.
+\textbf{Classe base di}:
+\begin{itemize}
+    \item RisultatoTestCliente;
+    \item RisultatoTestErgon.\\
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item RisultatoTestCarrello(in int dim\_carrello).\\
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item GetDimCarrello(): int\\
+    Ritorna la dimensione del carrello con cui è stato effettuato il test.\\
+\end{itemize} 
 
+\subsection{Forms e componenti utili} %**************************
+Di seguito sono riportate le classi che partecipano al funzionamento delle finestre dell'applicazione.
+
+\textbf{Form1}\\
+Form1 utilizza i componenti DevExpress per fornire all'utente la lista degli articoli disponibili 
+e i loro associati oltre alle funzionalità di avvio simulazione e di aggiornamento dei dati utilizzati dal sistema.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item Controller1 (Associazione): utilizza il controller che ne gestisce la logica per recuperare le informazioini da visualizzare dal ModelloArticoli.\\
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item Form1(in articoli:List<Articolo>, in associati:List<ArticoloAssociato>)\\
+    Crea un'istanza di Form1 utilizzando le liste passate come parametri per visualizzare gli articoli presenti e 
+    gli articoli associati dell'articolo più frequente nelle relative grid di visualizzazione.
+\end{itemize}
+\textit{Metodi privati}:\\
+\begin{itemize}
+    \item AggiornaGridAssociati(in sender:object, in args\_event:RowCellClickEventArgs): void\\
+    Aggionrna i dati della grid relativa agli articoli associati per mostrare all'utente 
+    gli articoli associati dell'articolo selezionato;
+    \item AggiornaDati(in sender:object, in args\_event:ItemClickEventArgs): void \\
+    Aggiorna i dati che il sistema utilizza quando l'utente accede alla funzionalità aggiornamento dati;
+    \item AvviaSimulazione(in sender:object, in args\_event:EventArgs): void \\
+    Avvia la simulazione di prelievo aprendo Form2 che si occupa della gestione della simulazione. 
+\end{itemize} 
+
+\textbf{Controller1}\\
+Controller1 gestisce la logica dell'applicazione per Form1 facendo comunicare il componente con il modello articoli.
+Inoltre ha lo scopo di creare il controller che gestisce la simulazione missione quando l'utente accede alla relativa funzionalità.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item ModelloArticoli(Associazione): interroga il modello articoli per fornire alla Form1 gli articoli da visualizzare\\
+    \item Form1(Composizione): gestisce l'intero ciclo di vita di Form1.
+    \item ControllerSimulazione(Dipendenza semplice: create): crea l'istanza di ControllerSimulazione.
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item Controller1(in AppInfo info)\\
+    Crea un'istanza di Controller1 utilizzando le info passate come parametro formale per stabilire una connessione con il database.
+    Le info fanno parte della classe statica Program che è un singleton per il sistema.
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item AggiornaGridArticoli(in cod\_um:string): void\\
+    Aggiorna la grid articoli prensente in Form1 con gli articoli presenti nel modello che hanno come codice unità di misura quello passato come parametro formale.
+    \item AggiornaGridAssociati(in cod\_art:string): void
+    Aggiorna la grid articoli associati con gli articoli che sono associati all'articolo con codice articolo passato come parametro formale.
+    \item AggiornaDB(): void
+    Aggiorna i dati presenti nel modello  articoli con i dati presenti a database.
+    Questa operazione viene svolta solo su richiesta dell'utente in quanto risulta essere molto dispendiosa nel calcolo delle associazioni.
+    \item AvviaSimulazione(in modello\_articoli:ModelloArticoli, in date\_ordini:List<DateTime>, in ums:List<string>): void
+\end{itemize} 
+\textit{Metodi privati}:\\
+\begin{itemize}
+    \item RimuoviPrimoLivelloUm(in arts:Dictionary<string-Dictionary<string-int>>, in lista\_um:List<string>): Dictionary<string-Dictionary<string-int>>
+    Metodo che dato un dizionario arts mantiene le chiavi (codici articoli) i cui articoli hanno unità di misura presente nella lista\_um parametro formale rimuovendo gli altri.
+    Questo può essere utile per visualizzare in grid articoli solo gli articoli di interesse filtrando quelli che non rispettano le unità di misura desiderate. 
+    \item RimuoviSecondoLivelloUm(in arts:Dictionary<string-int>, in lista\_um:List<string>): Dictionary<string-int>
+    Metodo che dato un dizionario che rappresenta gli articoli associati ad un articolo ne rimuove quelli che non hanno unità di misura presente all'interno di lista\_um
+    parametro formale.
+\end{itemize} 
+
+\textbf{ModelloArticoli}\\
+Classe che contiene il dizionario degli articoli disponibili al sistema e le loro associazioni e un dizionario con i dettagli di interesse di ogni articolo.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item Articolo(Aggregazione);\\
+    \item ErgdisEntities(Associazione).
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item .\\
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item .\\
+\end{itemize} 
 
 % \textbf{nome_classe}\\
 % descrizione
