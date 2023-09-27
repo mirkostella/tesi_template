@@ -376,7 +376,10 @@ Inoltre ha lo scopo di creare il controller che gestisce la simulazione missione
     \item AggiornaDB(): void
     Aggiorna i dati presenti nel modello  articoli con i dati presenti a database.
     Questa operazione viene svolta solo su richiesta dell'utente in quanto risulta essere molto dispendiosa nel calcolo delle associazioni.
-    \item AvviaSimulazione(in modello\_articoli:ModelloArticoli, in date\_ordini:List<DateTime>, in ums:List<string>): void
+    \item AvviaSimulazione(in modello\_articoli:ModelloArticoli, in date\_ordini:List<DateTime>, in ums:List<string>): void \\
+    Metodo che crea un'istanza di ControllerSimulazione che gestisce la logica dell'applicazione riguardante una simulazione di prelievo.
+    Viene invocato quando l'utente interagisce con il sistema per avviare una simulazione di prelievo che utilizza i dati presenti nel modello articoli
+    per inizializzare la simulazione.
 \end{itemize} 
 \textit{Metodi privati}:\\
 \begin{itemize}
@@ -386,23 +389,201 @@ Inoltre ha lo scopo di creare il controller che gestisce la simulazione missione
     \item RimuoviSecondoLivelloUm(in arts:Dictionary<string-int>, in lista\_um:List<string>): Dictionary<string-int>
     Metodo che dato un dizionario che rappresenta gli articoli associati ad un articolo ne rimuove quelli che non hanno unità di misura presente all'interno di lista\_um
     parametro formale.
-\end{itemize} 
+\end{itemize}  
 
 \textbf{ModelloArticoli}\\
 Classe che contiene il dizionario degli articoli disponibili al sistema e le loro associazioni e un dizionario con i dettagli di interesse di ogni articolo.
 \textbf{Dipendenze}:
 \begin{itemize}
     \item Articolo(Aggregazione);\\
-    \item ErgdisEntities(Associazione).
+    \item ErgdisEntities(Associazione).\\
 \end{itemize}
 \textit{Costruttori}:\\
 \begin{itemize}
-    \item .\\
+    \item ModelloArticoli(in ums:List<string>)\\
+    Crea un'istanza di ModelloArticoli utilizzando la lista ums parametro formale per reperire dal database gli articoli che hanno unità di misura contenuta nella lista.
+    Ars rappresenta il dizionario delle associazioni tra articoli mentre arts\_det contiene le informazioni utili di ogni articolo.
 \end{itemize}
 \textit{Metodi pubblici}:\\
 \begin{itemize}
-    \item .\\
+    \item AggiornaDati(): void \\
+    Metodo chiamato quando l'utente interagisce con il sistema per aggiornare i dati da visualizzare, in particolare la lista degli articoli e degli associati di ogni articolo.
+    \item GetArts(): Dictionary<string-Dictionary<string-int>> \\
+    Ritorna il dizionario delle associazioni articoli.
+    \item GetDet(): Dictionary<string-Articolo> \\
+    Ritorna il dizionario che contiene i dettagli di ogni articolo.
+    \item GetArtsAssoc(in cod\_art:string): Dictionary<string-Dictionary<string-int>> \\
+    Ritorna il dizionario degli articoli associati all'articolo con codice articolo uguale al parametro formale cod\_art.
+    \item GetDetArt(in cod\_art:string): Articolo. \\
+    Ritorna l'articolo con codice articolo specificato da cod\_art parametro formale da cui è possibile ricavare i dettagli dell'articolo.
 \end{itemize} 
+\textit{Metodi privati}:\\
+\begin{itemize}
+    \item CreaDizionarioArts(): void \\
+    Metodo che crea il dizionario degli articoli associati. Quando viene chiamato il metodo svuota il dizionario corrente e ne crea un altro aggiornato con i dati più recenti 
+    interrogando il database.
+    \item CreaDizionarioArtsDet(): void \\
+    Metodo che crea il dizionario dei dettagli di ogni articolo. Quando viene chiamato il metodo, svuota il dizionario corrente e ne crea un altro aggiornato con i dati più recenti 
+    interrogando il database.
+\end{itemize} 
+
+\textbf{FormSimulazione}\\
+FormSimulazione è la classe utilizzata per creare la finestra per la visualizzazione di una simulazione di prelievo.
+Viene mostrata quando l'utente avvia una simulazione di prelievo interagendo con il sistema.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item SezioneCarrello(Composizione): crea le istanze delle sezioni del carrello che servono a contenere i dati per la visualizzazione del contenuto del carrello all'interno delle CardView relative a
+    ciascuna sezione;\\
+    \item ControllerSimulazione(Associazione): viene utilizzato per aggiornare i dati relativi alla simulazione di prelievo in corso quando l'utente interagisce con il sistema.
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item FormSimulazione(in arts\_magazzino:List<Articolo>, in magazzino\_selezionato:string, in passo:int, in magazzini\_disponibili:List<string>)\\
+    Crea un'istanza di FormSimulazione che ha lo scopo di rappresentare i dati relativi alla rimulazione di prelievo in corso utilizzando i componenti DevExpres.
+    Il costruttore utilizza arts\_magazzino per inizializzare le CardView che rendono disponibile all'utente la lista degli articoli presenti nel magazzino utilizzato durante la simulazione;
+    utilizza gli altri parametri per inizializzare i componenti utili all'utente per selezionare altre modalità di simulazione per gli ordini previsti dalla simulazione in corso (ad esempio per avviare 
+    una simulazione con passo differente o su un altro magazzino).
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item CreaNuovaMissione(in dim\_carrello:int): void\\
+    Metodo chiamato quando viene avviata una nuova simulazione di prelievo. Il metodo utilizza gli articoli presenti nel magazzino della simulazione precedente per avviare la nuova simulazione e utilizza 
+    la dim\_carrello per inizializzare le sezioni del carrello visualizzate allo stato vuoto (in seguito verranno create nuove sezioni contenenti gli articoli prelevati ad ogni step missione);
+    \item AvanzaMissione(in articoli\_prelevati:List<Articolo>, in missione\_terminata:bool, in missioni\_terminate:bool): void\\
+    Avanza di uno step la missione in corso aggiornando le CardView che rappresentano lo stato del carrello allo step successivo.
+    Il metodo dispone gli oggetti prelevati appartenenti allo stesso ordine nella stessa sezione del carrello degli altri articoli dello stesso ordine, altrimenti un articolo prelevato occuperà
+    una nuova sezione del carrello. Il corretto riempimento delle sezioni del carrello viene garantito dal ControllerSimulazione che ha il compito di garantire che la missione di prelievo 
+    sia completabile utilizzando il carrello fornito dalla vista (un carrello con un numero di sezioni inferiore al numero di ordini da prelevare non sarebbe in grado di contenere tutti gli ordini previsti dalla simulazione).
+    Se la missione di prelievo risulta completata e sono presenti altre missioni prima di completare la simulazione viene creata una nuova riga di CardView per rappresentare il carrello allo stato 
+    vuoto per la missione successiva.
+    \item VediStatistiche(): void\\
+    Metodo invocato quando l'utente interagisce con il sistema per visualizzare le statistiche riguardanti tutte le possibili simulazioni di prelievo disponibili per il magazzino cliente e per tutti i passi magazzino Ergon.
+    Il metodo interagisce con ControllerSimulazione che apre la finestra di visualizzazione statistiche.
+    \item CambiaPasso(): void\\
+    Metodo chiamato quando l'utente interagisce con il sistema per avviare una nuova simulazione di prelievo che utillizza un passo associazione articoli diverso dalla missione di prelievo corrente.
+    Viene ripristinata la missione allo step iniziale e vengono aggiornati gli articoli presenti a magazzino secondo il passo associazione selezionato e le sezioni del carrello allo stato vuoto.
+    \item CambiaMagazzino(): void\\
+    Metodo chiamato quando l'utente interagisce con il sistema per avviare una nuova simulazione di prelievo che utillizza un magazzino diverso dalla missione di prelievo corrente.
+    Viene ripristinata la missione allo step iniziale e vengono aggiornati gli articoli presenti a magazzino secondo il magazzino e passo associazione selezionato e le sezioni del carrello allo stato vuoto.
+    \item AggiornaSezioniCarrello(in articoli\_prelevati:List<Articolo>): void\\
+    Metodo che aggiorna le sezioni del carrello utilizzando gli articoli prelevati allo step successivo. 
+\end{itemize} 
+\textit{Metodi privati}:\\
+\begin{itemize}
+    \item AggiornaSezioniCarrello(in articoli\_prelevati:List<Articolo>): void\\
+    Metodo che aggiorna le sezioni del carrello utilizzando gli articoli prelevati allo step successivo. 
+\end{itemize}
+
+\textbf{ControllerSimulazione}\\
+Classe che gestisce la simulazione di prelievo avviata dall'utente. Ad ogni interazione comunica con il modello per l'avanzamento o la creazione di una simulazione di prelievo.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item Simulazione(Composizione): modello logico per la simulazione di prelievo gestita dal controller;\\
+    \item ControllerTest(Dipendenza semplice: create): crea l'istanza di ControllerTest quando l'utente interagisce con il sistema per visualizzare le statistiche relative 
+    alle simulazioni di prelievo disponibili sugli ordini previsti dalla simulazione in corso.
+    \item ModelloArticoli(Dipendenza semplice: use): utilizzato per creare un'istanza di Simulazione.
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item ControllerSimulazione(in arts:ModelloArticoli, in date\_ordini:List<DateTime>, in ums:List<string>).\\
+    Crea un'istanza di ControllerSimulazione che utilizza i parametri formali per creare il modello della simulazione di prelievo.
+    Il modello creato per la simulazione utilizzerà solo gli articoli con unità di misura presente nella lista ums parametro formale e ricaverà dal database gli ordini cliente 
+    soddisfatti nelle date presesnti in date\_ordini (questo avviene per limitare la simulazione agli ordini soddisfatti in un arco temporale definito e non su tutto lo storico ordini).
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item CambiaPassoMissione(in nuovo\_passo:int): void.\\
+    Ripristina il modello e la vista secondo il passo simulazione selezionato dall'utente.
+    \item CambiaMagazzinoMissione(in ind\_magazzino:int): void \\
+    Ripristina il modello e la vista secondo il magazzino selezionato dall'utente.
+    \item VediStatistiche(): void \\
+    Crea un'istanza di ControllerTest che gestirà la finestra di visualizzazione statistiche.
+    Il metodo passa al ControllerTest il ModelloMagazzini che verrà utilizzato per eseguire i test su tutte le configurazioni disponibili e visualizzarne i risultati.
+    \item GetModelloMagazzini(): ModelloMagazzini \\
+    Ritorna il ModelloMagazzini utilizzato dalla simulazione in corso.
+\end{itemize} 
+\textbf{Simulazione}\\
+Modello logico per una simulazione di prelievo. Tiene conto delle missioni eseguite per completare la simulazione e dell'ordine con cui gli articoli vengono prelevati dal magazzino.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item Target(Associazione): Utilizza i target missione passati dal client per prelevare gli articoli dal magazzino e per memorizzare le posizioni di prelievo di tali articoli\\
+    \item ModelloMagazzini(Aggregazione): Crea il ModelloMagazzini che gestisce le configurazioni di magazzino disponibili.\\
+    \item Articolo(Associazione): utilizza gli articoli restituiti dal ModelloMagazzini per memorizzare gl articoli prelevati nello step missione.\\
+    \item ModelloArticoli(Dipendenza semplice: use): utilizzato per creare il ModelloMagazzini.
+    \end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item Simulazione(in arts:ModelloArticoli,in date\_ordini:List<DateTime>, in ums:List<string>).\\
+    Crea un'istanza di Simulazione utilizzando date\_ordini e ums per prelevare dal database gli articoli da prelevare dalla configurazione di magazzino selezionata.
+    Utilizza arts per creare il ModelloMagazzini che verrà utilizzato per ricavare la configurazione di magazzino su cui avviare la simulazione.
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item AvanzaStepMissione(): int \\
+    Avanza di uno step la missione in corso e ritorna lo step aggiornato. Avanzare di uno step significa prelevare dal magazzino selezionato gli articoli dello step successivo 
+    e aggiornare le posizioni di prelievo dei relativi target missione. Inoltre vengono incrementate il numero di fermate effettuate e aggiornata la distanza percorsa.
+    Articoli prelevati contiene gli articoli prelevati durante lo step in corso;
+    \item CambiaPassoMagazzino(in nuovo\_passo:int): void \\
+    Metodo che cambia il passo della simulazione ripristinando la simulazione allo stato iniziale;
+    Per cambiare il passo simulazione viene reperita la nuova configurazione di magazzino dal ModelloMagazzini che contiene tutte le configurazioni di magazzino disponibili.
+    \item ResetSimulazione(): void \\
+    Ripristina la simulazione allo stato iniziale;
+    \item GetPuntiPrelievo(): Array<Articolo> \\
+    Interroga il Modello magazzini per ricavare la disposizione degli articoli del magazzino selezionato ovvero il magazzino sul quale sta avvenendo la simulazione di prelievo.
+    \item GetNumeroMissione(): int \\
+    Ritorna il numero della missione in corso;
+    Ritorna il passo associazione articoli della simulazione in corso;
+    \item GetFermate(): int \\
+    Ritorna il numero di fermate attuali della simulazione in corso;
+    \item GetDistanza(): int \\
+    Ritorna la distanza percorsa attuale della simulazione in corso;
+    \item GetArticoliPrelevatiStep(): List<Articolo> \\
+    Ritorna la lista degli articoli prelevati durante lo step missione in corso;
+    \item GetTargetArticoliPrelevatiStep(): List<Target> \\
+    Ritorna la lista dei target prelevati durante lo step in corso da cui è possibile ricavare anche la posizione da cui sono stati prelevati gli articoli;
+    \item GetPasso(): int \\
+    Ritorna il passo associazione della missione in corso;\\
+    \item GetModelloMagazzini(): ModelloMagazzini
+    Ritorna il ModelloMagazzini utilizzato dalla simulazione.
+\end{itemize} 
+\textbf{ModelloMagazzini}\\
+Il ModelloMagazzini contiene le configurazioni di magazzino disponibili alle simulazioni di prelievo.
+Crea e popola i magazzini a seconda dei passi associazioni disponibili.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item ModelloArticoli(Associazione): Utilizza il ModelloArticoli per popolare i magazzini;\\
+    \item Magazzino(Composizione): Un magazzino viene utilizzato dalla simulazione di prelievo. Il magazzino utilizzato da una simulazione di prelievo non può essere modificato 
+    da fonti esterne in quanto deve essere garantito il completamento degli ordini presenti nella simulazione; viene infatti restituita una copia del magazzino ogni volta che un'altra 
+    istanza di un oggetto ne fa richiesta.
+    Ogni configurazione viene identificata da una chiave che corrisponde al passo associazioni utilizzato per popolarlo.
+    Inoltre viene memorizzata una configurazione sul magazzino cliente la quale non richiede una chiave dato che non viene creata seguendo un passo associazioni.
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item ModelloMagazzini(in ums:List<string>)
+    Crea un'istanza di ModelloMagazzini che utilizza gli articoli con unità di misura contenuti nella lista ums parametro formale per popolare le configurazioni di magazzino.
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item GetMagazzini(): Dictionary<int-Magazzino>\\
+    Ritorna una copia del dizionario magazzini Ergon dove la chiave è il passo associazione utilizzato per popolare i magazzini;
+    \item GetMagazzino(in ind:int): Magazzino \\
+    Ritorna il magazzino con passo associazione ind;
+    \item GetMagazzinoCliente(): Magazzino \\
+    Ritorna il magazzino cliente;
+    \item PopolaMagazzinoCliente(in cod_deposito:string): void \\
+    Popola il magazzino cliente utilizzando gli articoli presenti nel deposito con codice deposito cod_deposito rispettando la loro disposizione attuale;
+    \item PopolaMagazzinoErgon(in ums:List<string>, in passo:int): Magazzino \\
+    Popola il magazzino Ergon con gli articoli presenti che hanno unità di misura contenuta in ums e con passo associazione indicato da passo;
+    \item RimuoviMagazzinoErgon(in passo:int): void \\
+    Rimuove il magazzino con passo associazione passo dal dizionario che contiene le configurazioni dei magazzini Ergon;
+    \item RimuoviMagazzinoCliente(): void \\
+    Elimina la configurazione di magazzino cliente;
+    \item GetIndiciMagazzini(): List<int> \\
+    Ritorna la lista di tutti i passi configurazioni disponibili per i magazzini Ergon.
+\end{itemize} 
+
+
 
 % \textbf{nome_classe}\\
 % descrizione
@@ -419,12 +600,13 @@ Classe che contiene il dizionario degli articoli disponibili al sistema e le lor
 %     \item .\\
 % \end{itemize} 
 
-% \item RisultatoTestCliente(in nome\_cliente:string, in cod_dep:string, in dimCarrello:int):\\
-% Crea un'istanza di RisultatoTestCliente utilizzando il nome del cliente, il codice del deposito sul quale viene effettuato il test e la 
-% dimensione del carrello utilizzato per completare gli ordini cliente per settare i relativi campi dati della classe.
 
 
 
+
+
+% \item ModelloArticoli(Dipendenza semplice: use): Utilizza il modello articoli per ricavare gli articoli relativi al magazzino selezionato che hanno unità di misura desiderate.
+%     Viene garantito che tutti gli articoli presenti all'interno degli ordini clienti siano presenti all'interno della simulazione di prelievo altrimenti gli ordini non potrebbero essere completati.
 
 
 
