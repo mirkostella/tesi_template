@@ -571,8 +571,8 @@ Crea e popola i magazzini a seconda dei passi associazioni disponibili.
     Ritorna il magazzino con passo associazione ind;
     \item GetMagazzinoCliente(): Magazzino \\
     Ritorna il magazzino cliente;
-    \item PopolaMagazzinoCliente(in cod_deposito:string): void \\
-    Popola il magazzino cliente utilizzando gli articoli presenti nel deposito con codice deposito cod_deposito rispettando la loro disposizione attuale;
+    \item PopolaMagazzinoCliente(in cod\_deposito:string): void \\
+    Popola il magazzino cliente utilizzando gli articoli presenti nel deposito con codice deposito cod\_deposito rispettando la loro disposizione attuale;
     \item PopolaMagazzinoErgon(in ums:List<string>, in passo:int): Magazzino \\
     Popola il magazzino Ergon con gli articoli presenti che hanno unità di misura contenuta in ums e con passo associazione indicato da passo;
     \item RimuoviMagazzinoErgon(in passo:int): void \\
@@ -582,8 +582,29 @@ Crea e popola i magazzini a seconda dei passi associazioni disponibili.
     \item GetIndiciMagazzini(): List<int> \\
     Ritorna la lista di tutti i passi configurazioni disponibili per i magazzini Ergon.
 \end{itemize} 
-
-
+\textbf{FormRisultatiTest}\\
+FormRisultatiTest utilizza i componenti DevExpress per fornire all'utente i risultati di tutte le simulazioni effettuate
+sul magazzino cliente e sul magazzino Ergon a passi differenti.
+Vengono prodotte tre GridView: una che racchiude i risultati dei test effettuati sul magazzino cliente, una per i test fermate sul magazzino 
+Ergon e una per i test sulla distanza sul magazzino Ergon.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item ControllerTest();\\
+    \item ResocontoTestErgon(Aggregazione);\\
+    \item ResocontoTestCliente(Aggregazione);\\
+    \item RisultatoTestDistanzaCliente();\\
+    \item RisultatoTestFermateCliente();\\
+    \item RisultatoTestFermateErgon();\\
+    \item RisultatoTestDistanzaErgon().\\
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item .\\
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item .\\
+\end{itemize} 
 
 % \textbf{nome_classe}\\
 % descrizione
