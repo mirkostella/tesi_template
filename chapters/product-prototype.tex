@@ -19,14 +19,79 @@ Descrizione Tecnologia 2
 
 \section{Progettazione}
 \label{sec:progettazione}
+In questo capitolo vengono descritte in dettaglio le dipendenze e i metodi di ciascuna classe presente nell'architettura software utilizzata dal sistema.
+Ai fini di una maggior comprensione vengono forniti i diagrammi UML delle classi prodotti durante il periodo di progettazione del software e migliorati durante il corso del progetto.
+\subsection{Panoramica generale} %**************************
+Lo schema seguente contiene una visione generale dei componenti che costituiscono il sistema omettendone gli aspetti secondari che verranno descritti nelle sezioni dedicate di seguito.
+\newpage
+\begin{landscape}
+\pagestyle{fancy}
 
+\begin{figure}[!h] 
+    \centering
+    \includegraphics[width=\linewidth, keepaspectratio]{../stage/materiale\_tesi/Materiale\_tesi/Codice/screen\_classi/generale.png} 
+    \caption{UML panoramica generale}
+\end{figure}  
+\end{landscape}
 \subsection{Classi modello di business} %**************************
-Il modello di business costituisce la logica dell'applicazione.
-Le classi che ne fanno parte sono:
+Il modello di business costituisce la logica di business del sistema.
+\begin{figure}[!h] 
+    \centering 
+    \makebox[\textwidth]{
+        \includegraphics[width=1.5\columnwidth]{../stage/materiale\_tesi/Materiale\_tesi/Codice/screen\_classi/modello\_business.png} 
+        }
+        \caption{UML modello di business}
+    \end{figure}
+\textbf{ModelloArticoli}\\
+Classe che contiene il dizionario degli articoli disponibili al sistema e le loro associazioni e un dizionario con i dettagli di interesse di ogni articolo.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item Articolo(Aggregazione): crea gli articoli che verranno utilizzati dal sistema;\\
+    \item ErgdisEntities(Associazione): utilizzato per recuperare dal database gli articoli disponibili che il sistema utilizza.\\
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item ModelloArticoli(in ums:List<string>)\\
+    Crea un'istanza di ModelloArticoli utilizzando la lista ums parametro formale per reperire dal database gli articoli che hanno unità di misura contenuta nella lista.
+    Ars rappresenta il dizionario delle associazioni tra articoli mentre arts\_det contiene le informazioni utili di ogni articolo.
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item AggiornaDati(): void \\
+    Metodo chiamato quando l'utente interagisce con il sistema per aggiornare i dati da visualizzare, in particolare la lista degli articoli e degli associati di ogni articolo.
+    \item GetArts(): Dictionary<string-Dictionary<string-int>> \\
+    Ritorna il dizionario delle associazioni articoli.
+    \item GetDet(): Dictionary<string-Articolo> \\
+    Ritorna il dizionario che contiene i dettagli di ogni articolo.
+    \item GetArtsAssoc(in cod\_art:string): Dictionary<string-Dictionary<string-int>> \\
+    Ritorna il dizionario degli articoli associati all'articolo con codice articolo uguale al parametro formale cod\_art.
+    \item GetDetArt(in cod\_art:string): Articolo. \\
+    Ritorna l'articolo con codice articolo specificato da cod\_art parametro formale da cui è possibile ricavare i dettagli dell'articolo.
+\end{itemize} 
+\textit{Metodi privati}:\\
+\begin{itemize}
+    \item CreaDizionarioArts(): void \\
+    Metodo che crea il dizionario degli articoli associati. Quando viene chiamato il metodo svuota il dizionario corrente e ne crea un altro aggiornato con i dati più recenti 
+    interrogando il database.
+    \item CreaDizionarioArtsDet(): void \\
+    Metodo che crea il dizionario dei dettagli di ogni articolo. Quando viene chiamato il metodo, svuota il dizionario corrente e ne crea un altro aggiornato con i dati più recenti 
+    interrogando il database.
+\end{itemize} 
+
+
+
+
 
 \subsection{Classi utili al modello di business} %**************************
 Di seguito sono riportate le classi che vengono utilizzate dal modello di business.
 \\\\
+\begin{figure}[!h] 
+    \centering 
+    \makebox[\textwidth]{
+    \includegraphics[width=1.5\columnwidth]{../stage/materiale\_tesi/Materiale\_tesi/Codice/screen\_classi/utili\_modello\_business.png} 
+    }
+    \caption{UML classi utili al modello di business}
+\end{figure}
 \textbf{Magazzino}
 \\
 Rappresenta un magazzino sul quale può essere eseguita una \gls{simulazione di prelievog} o i
@@ -217,6 +282,7 @@ Classe utilizzata per confrontare i risultati dei test eseguiti tra configurazio
 \subsection{Classi utili alle viste}
 Di seguito sono riportate le classi che vengono utilizzate dalle viste per rappresentare le informazioni di interesse per l'utente.
 \\\\
+ 
 \textbf{ResocontoTest}\\
 Classe astratta che rappresenta un set di test eseguiti e ne raccoglie i risultati ottenuti ed altre informazioni tra le quali il nome e una descrizione testuale dei test eseguiti.
 \textbf{Estesa da}:
@@ -390,43 +456,6 @@ Inoltre ha lo scopo di creare il controller che gestisce la simulazione missione
     Metodo che dato un dizionario che rappresenta gli articoli associati ad un articolo ne rimuove quelli che non hanno unità di misura presente all'interno di lista\_um
     parametro formale.
 \end{itemize}  
-
-\textbf{ModelloArticoli}\\
-Classe che contiene il dizionario degli articoli disponibili al sistema e le loro associazioni e un dizionario con i dettagli di interesse di ogni articolo.
-\textbf{Dipendenze}:
-\begin{itemize}
-    \item Articolo(Aggregazione);\\
-    \item ErgdisEntities(Associazione).\\
-\end{itemize}
-\textit{Costruttori}:\\
-\begin{itemize}
-    \item ModelloArticoli(in ums:List<string>)\\
-    Crea un'istanza di ModelloArticoli utilizzando la lista ums parametro formale per reperire dal database gli articoli che hanno unità di misura contenuta nella lista.
-    Ars rappresenta il dizionario delle associazioni tra articoli mentre arts\_det contiene le informazioni utili di ogni articolo.
-\end{itemize}
-\textit{Metodi pubblici}:\\
-\begin{itemize}
-    \item AggiornaDati(): void \\
-    Metodo chiamato quando l'utente interagisce con il sistema per aggiornare i dati da visualizzare, in particolare la lista degli articoli e degli associati di ogni articolo.
-    \item GetArts(): Dictionary<string-Dictionary<string-int>> \\
-    Ritorna il dizionario delle associazioni articoli.
-    \item GetDet(): Dictionary<string-Articolo> \\
-    Ritorna il dizionario che contiene i dettagli di ogni articolo.
-    \item GetArtsAssoc(in cod\_art:string): Dictionary<string-Dictionary<string-int>> \\
-    Ritorna il dizionario degli articoli associati all'articolo con codice articolo uguale al parametro formale cod\_art.
-    \item GetDetArt(in cod\_art:string): Articolo. \\
-    Ritorna l'articolo con codice articolo specificato da cod\_art parametro formale da cui è possibile ricavare i dettagli dell'articolo.
-\end{itemize} 
-\textit{Metodi privati}:\\
-\begin{itemize}
-    \item CreaDizionarioArts(): void \\
-    Metodo che crea il dizionario degli articoli associati. Quando viene chiamato il metodo svuota il dizionario corrente e ne crea un altro aggiornato con i dati più recenti 
-    interrogando il database.
-    \item CreaDizionarioArtsDet(): void \\
-    Metodo che crea il dizionario dei dettagli di ogni articolo. Quando viene chiamato il metodo, svuota il dizionario corrente e ne crea un altro aggiornato con i dati più recenti 
-    interrogando il database.
-\end{itemize} 
-
 \textbf{FormSimulazione}\\
 FormSimulazione è la classe utilizzata per creare la finestra per la visualizzazione di una simulazione di prelievo.
 Viene mostrata quando l'utente avvia una simulazione di prelievo interagendo con il sistema.
@@ -478,7 +507,7 @@ Viene mostrata quando l'utente avvia una simulazione di prelievo interagendo con
 Classe che gestisce la simulazione di prelievo avviata dall'utente. Ad ogni interazione comunica con il modello per l'avanzamento o la creazione di una simulazione di prelievo.
 \textbf{Dipendenze}:
 \begin{itemize}
-    \item Simulazione(Composizione): modello logico per la simulazione di prelievo gestita dal controller;\\
+    \item Simulazione(Aggregazione): modello logico per la simulazione di prelievo gestita dal controller;\\
     \item ControllerTest(Dipendenza semplice: create): crea l'istanza di ControllerTest quando l'utente interagisce con il sistema per visualizzare le statistiche relative 
     alle simulazioni di prelievo disponibili sugli ordini previsti dalla simulazione in corso.
     \item ModelloArticoli(Dipendenza semplice: use): utilizzato per creare un'istanza di Simulazione.
@@ -557,6 +586,7 @@ Crea e popola i magazzini a seconda dei passi associazioni disponibili.
     istanza di un oggetto ne fa richiesta.
     Ogni configurazione viene identificata da una chiave che corrisponde al passo associazioni utilizzato per popolarlo.
     Inoltre viene memorizzata una configurazione sul magazzino cliente la quale non richiede una chiave dato che non viene creata seguendo un passo associazioni.
+    \item ErgdisEntities(Associazione): utilizzato per recuperare gli ordini cliente e di conseguenza per creare e assegnare al carrello di ciascun magazzino la missione di prelievo su cui eseguire la simulazione.\\
 \end{itemize}
 \textit{Costruttori}:\\
 \begin{itemize}
@@ -568,7 +598,7 @@ Crea e popola i magazzini a seconda dei passi associazioni disponibili.
     \item GetMagazzini(): Dictionary<int-Magazzino>\\
     Ritorna una copia del dizionario magazzini Ergon dove la chiave è il passo associazione utilizzato per popolare i magazzini;
     \item GetMagazzino(in ind:int): Magazzino \\
-    Ritorna il magazzino con passo associazione ind;
+    Ritorna il magazzino con passo associazione ind. Se il magazzino non è presente nella lista di magazzini viene creato e restituito;
     \item GetMagazzinoCliente(): Magazzino \\
     Ritorna il magazzino cliente;
     \item PopolaMagazzinoCliente(in cod\_deposito:string): void \\
@@ -589,23 +619,126 @@ Vengono prodotte tre GridView: una che racchiude i risultati dei test effettuati
 Ergon e una per i test sulla distanza sul magazzino Ergon.
 \textbf{Dipendenze}:
 \begin{itemize}
-    \item ControllerTest();\\
-    \item ResocontoTestErgon(Aggregazione);\\
-    \item ResocontoTestCliente(Aggregazione);\\
-    \item RisultatoTestDistanzaCliente();\\
-    \item RisultatoTestFermateCliente();\\
-    \item RisultatoTestFermateErgon();\\
-    \item RisultatoTestDistanzaErgon().\\
+    \item ControllerTest(Associazione): controller che mette in comunicazione la vista con il modello Simulazione per recuperare i risultati dei test;\\
+    \item ResocontoTestErgon(Aggregazione): utilizzata per memorizzare all'interno della vista le informazini di interesse per un gruppo di test effettuati sul magazzino Ergon;\\
+    \item ResocontoTestCliente(Aggregazione):utilizzata per memorizzare all'interno della vista le informazini di interesse per un gruppo di test effettuati sul magazzino Cliente;;\\
+    \item RisultatoTestDistanzaCliente(Dipendenza semplice: use): contiene le informazioni di interesse per un test distanza effettuato sul magazzino cliente;\\
+    \item RisultatoTestFermateCliente(Dipendenza semplice: use): contiene le informazioni di interesse per un test fermate effettuato sul magazzino cliente;\\
+    \item RisultatoTestFermateErgon(Dipendenza semplice: use): contiene le informazioni di interesse per un test fermate effettuato sul magazzino Ergon;\\
+    \item RisultatoTestDistanzaErgon(Dipendenza semplice: use): contiene le informazioni di interesse per un test distanza effettuato sul magazzino Ergon.\\
 \end{itemize}
 \textit{Costruttori}:\\
 \begin{itemize}
-    \item .\\
+    \item FormRisultatiTest(in ris\_test\_cliente:List<RisultatoTestCliente>, in ris\_test\_fermate\_Ergon:List<RisultatoTestFermateErgon>, in ris\_test\_distanza\_Ergon:List<RisultatoTestDistanzaErgon>)\\
+    Crea un'istanza di FormRisultatiTest utilizzando le liste fornite come parametri formali per creare le corrispettive GridView che rappresentano 
+    i risultati dei test effettuati sui magazzini.
 \end{itemize}
 \textit{Metodi pubblici}:\\
 \begin{itemize}
-    \item .\\
+    \item VisualizzaDifferenzePassi(): void \\
+    Metodo chiamato quando l'utente interagisce con il sistema per visualizzare le differenze tra i passi di magazzino.
+\end{itemize} 
+\textit{Metodi privati}:\\
+\begin{itemize}
+    \item ApplicaStileRigaMiglioreFermate(): void\\
+    Calcola il risulatato migliore presente nella GridView relativa ai risultati dei test sulle fermate e applica lo stile previsto.
+    In caso di parità tra righe viene applicato lo stile alla riga che risulta avere il miglior risultato nel test sulle distanze.
+    \item ApplicaStileRigaMiglioreDistanza(): void \\
+    Calcola il risulatato migliore presente nella GridView relativa ai risultati dei test sulle distanze e applica lo stile previsto.
+    In caso di parità tra righe viene applicato lo stile alla riga che risulta avere il miglior risultato nel test sulle fermate.
+    \item ApplicaStileRigaPeggioreFermate(): void \\
+    Calcola il risulatato peggiore presente nella GridView relativa ai risultati dei test sulle fermate e applica lo stile previsto.
+    In caso di parità tra righe viene applicato lo stile alla riga che risulta avere il peggior risultato nel test sulle distanze.
+    \item ApplicaStileRigaPeggioreDistanza(): void \\
+    Calcola il risulatato peggiore presente nella GridView relativa ai risultati dei test sulle distanze e applica lo stile previsto.
+    In caso di parità tra righe viene applicato lo stile alla riga che risulta avere il peggior risultato nel test sulle fermate.
 \end{itemize} 
 
+\textbf{ControllerTest}\\
+Controller che ha lo scopo di effettuare le simulazioni sulle configurazioni di magazzino e di creare i risultati dei test da passare alla vista
+per la loro visualizzazione.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item Simulazione(Associazione): usa Simulazione per eseguire i test su tutte le configurazioni di magazzino disponibili;\\
+    \item FormRisultatiTest(Composizione): crea l'istanza che mostrerà all'utente i risultati prodotti dalle simulazioni;\\
+    \item ControllerDifferenzePassi(Dipendenza semplice: create): crea il controller per la FormDifferenzePassi quando l'utente interagisce con il sistema per visualizzare le differenze passi tra
+    tutti i magazzini disponibili;\\
+    \item RisultatoTestDistanzaCliente(Dipendenza semplice: create): crea il risultato di un test distanza su magazzino cliente da passare alla FormRisultatiTest;\\
+    \item RisultatoTestFermateCliente(Dipendenza semplice: create): crea il risultato di un test distanza su magazzino cliente da passare alla FormRisultatiTest;\\
+    \item RisultatoTestFermateErgon(Dipendenza semplice: create): crea il risultato di un test distanza su magazzino cliente da passare alla FormRisultatiTest;\\
+    \item RisultatoTestDistanzaErgon(Dipendenza semplice: create): crea il risultato di un test distanza su magazzino cliente da passare alla FormRisultatiTest.\\
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item ControllerTest(in sim:Simulazione)\\
+    Crea un'istanza di ControllerTest usando sim parametro formale per effettuare i test sulle configurazioni di magazzino.\\
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item EseguiTestCliente(): List<RisultatoTestCliente>\\
+    Ritorna la lista di tutti i risultati ottenuti dall'esecuzione di tutti i test disponibili sul magazzino cliente;
+    \item EseguiTestFermateCliente(): List<RisultatoTestFermateCliente>\\
+    Ritorna la lista di tutti i risultati sui test fermate eseguiti sul magazzino cliente;
+    \item EseguiTestDistanzaCliente(): List<RisultatoTestDistanzaCliente>\\
+    Ritorna la lista di tutti i risultati sui test distanza eseguiti sul magazzino cliente;
+    \item EseguiTestFermateErgon(): List<RisultatoTestFermateErgon>\\
+    Ritorna la lista di tutti i risultati sui test fermate eseguiti sul magazzino Ergon;
+    \item EseguiTestDistanzaErgon(): List<RisultatoTestDistanzaErgon>\\
+    Ritorna la lista di tutti i risultati sui test distanza eseguiti sul magazzino Ergon.\\
+\end{itemize} 
+\textit{Metodi privati}:\\
+\begin{itemize}
+\item ResetSimulazione(): void \\
+Resetta l'istanza di Simulazione impostando il numero di fermate e la distanza percorsa a zero;
+\item GetModelloMagazzini(): ModelloMagazzini \\
+Ritorna il ModelloMagazzini utilizzato dalla Simulazione in corso.\\
+\end{itemize}
+
+\textbf{FormDifferenzePassi}\\
+Form che mostra all'utente le differenze tra le configurazioni di magazzino disponibili.
+Tramite la Form l'utente può selezionare il range dei punti di prelievo che si vogliono confrontare e visualizzare
+le differenze tra gli articoli che non si trovano più nello stesso range o articoli che si trovano nello stesso range ma con 
+diversa posizione.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item ControllerDifferenzePassi(Associazione): utilizzato per reperire i risultati sulle differenze tra i passi dei magazzini disponibili nel modello magazzini;\\
+    \item ComparatoreDiffPassiMagazzini(Dipendenza semplice: use): classe che fornisce le differenze tra due magazzini aventi passi differenti tra loro.\\
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item FormDifferenzePassi()\\
+    Crea un'istanza di FormDifferenzePassi. Il costruttore richiama i metodi opportuni di ControllerDifferenzePassi per reperire i 
+    ComparatoreDiffPassiMagazzini che racchiudono le info relative alle differenze delle configurazioni di magazzino nel range selezionato.
+\end{itemize}
+\textit{Metodi privati}:\\
+\begin{itemize}
+    \item AggiornaStatistiche(in sender:object, in args\_event:ItemClickEventArgs): void\\
+    Metodo invocato quando l'utente interagisce con la form per visualizzare le differenze tra i passi di magazzino in un range diverso.
+    Il metodo interagisce con il ControllerDifferenzePassi per aggiornare le informazioni visualizzate nella form.\\
+\end{itemize} 
+
+\textbf{ControllerDifferenzePassi}\\
+Controller che ha lo scopo di fornire a FormDifferenzePassi la lista dei ComparatoreDiffPassiMagazzini in modo da ricavare le informazioni relative alle differenze tra
+le configurazioni di magazzino disponibili.
+\textbf{Dipendenze}:
+\begin{itemize}
+    \item FormDifferenzePassi(Composizione): crea e gestisce la logica di applicazione della Form\\
+    \item ComparatoreDiffPassiMagazzini(Dipendenza semplice: create): crea le istanze di ComparatoreDiffPassiMagazzini da fornire alla FormDifferenzePassi\\
+    \item ModelloMagazzini(Associazione): comunica con il ModelloMagazzini per reperire le informazioni per creare i ComparatoreDiffPassiMagazzini necessari al funzionamento di FormDifferenzePassi\\
+\end{itemize}
+\textit{Costruttori}:\\
+\begin{itemize}
+    \item ControllerDifferenzePassi(in mag:ModelloMagazzini)\\
+    Crea un'istanza di ControllerDifferenzePassi utilizzando il ModelloMagazzini come riferimento per reperire le configurazioini di magazzino disponibili.
+\end{itemize}
+\textit{Metodi pubblici}:\\
+\begin{itemize}
+    \item GetPassi(): List<int>\\
+    Ritorna la lista dei passi magazzino disponibili nel ModelloMagazzini;
+    \item GetDiffPassi(in passo1:int, in passo2:int): ComparatoreDiffPassiMagazzini.\\
+    Ritorna il ComparatoreDiffPassiMagazzini che confronta le configurazioni di magazzino corrispondenti ai passi passati come parametri formali.
+\end{itemize} 
+ 
 % \textbf{nome_classe}\\
 % descrizione
 % \textbf{Dipendenze}:
@@ -620,9 +753,6 @@ Ergon e una per i test sulla distanza sul magazzino Ergon.
 % \begin{itemize}
 %     \item .\\
 % \end{itemize} 
-
-
-
 
 
 
